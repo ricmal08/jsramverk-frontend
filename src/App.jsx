@@ -5,8 +5,8 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
-import Documents from './src/documents';
-import Doc from './pages/doc';
+//import Documents from './src/documents';
+//import Doc from './src/doc';
 
 ///Tar emot api
 const API_URL = "";
@@ -22,8 +22,13 @@ function App() {
         </header>
 
       <main className="main" id="main">
-      <Routes></Routes>
       <h2>Dokument</h2>
+      <Routes>
+      <Route path="/" element={<Documents apiUrl={API_URL} />} />
+
+
+      <Route path="/create" element={<Doc apiUrl={API_URL} isNew={true} />} />
+      </Routes>
 
         <h3><a href="#">Första dokumentets titel</a></h3>
         <h3><a href="#">En annan titel</a></h3>
