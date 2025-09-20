@@ -12,7 +12,7 @@ import Doc from './views/doc';
 const API_URL = "http://localhost:3000";
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
     <BrowserRouter basename="">
@@ -22,16 +22,15 @@ function App() {
         </header>
 
       <main className="main" id="main">
-      <h2>Dokument</h2>
+
       <Routes>
       <Route path="/" element={<Documents apiUrl={API_URL} />} />
 
 
       <Route path="/create" element={<Doc apiUrl={API_URL} isNew={true} />} />
+      <Route path="/:id" element={<Doc apiUrl={API_URL} isNew={false} />} />
       </Routes>
 
-        <h3><a href="#">Första dokumentets titel</a></h3>
-        <h3><a href="#">En annan titel</a></h3>
       </main>
 
     </div>
