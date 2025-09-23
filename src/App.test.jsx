@@ -7,16 +7,12 @@ import App from './App';
 
 ///global.fetch = vi.fn();
 
-//it('test that app.test.jsx works', () => {
-
-///console.log('✅✅✅ Setupen fungerar! ✅✅✅');
-///});
 
 //Mockar api-anrop
 beforeAll(() => {
-    // vite stoppar fetch-anrop
+    //kapar api-koppling
     global.fetch = vi.fn(() =>
-        //returnerar en positive resolve med tomt dokument
+        //Tar inte emot någon API-input, utan ignorerar det helt och hållet och ersätter hela anropet med en resolve tom lista
         Promise.resolve({
             ok: true,
             json: () => Promise.resolve([]),
