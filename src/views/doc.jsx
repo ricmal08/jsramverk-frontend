@@ -18,7 +18,7 @@ function Doc({ isNew }) {
                 <textarea id="content" name="content" />
             </div>
 
-            <button type="submit">Spara</button>
+            <button type="submit">Spara Dokument</button>
         </form>
     );
 }
