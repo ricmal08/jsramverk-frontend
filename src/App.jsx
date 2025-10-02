@@ -9,7 +9,7 @@ import Documents from './views/documents';
 import Doc from './views/doc';
 
 ///Tar emot api
-const API_URL = "http://localhost:3000";
+const API_URL = "https://jsramverk-editor-jahl24-bfeufbb0dwcfg6a6.northeurope-01.azurewebsites.net/";
 
 function App() {
 
