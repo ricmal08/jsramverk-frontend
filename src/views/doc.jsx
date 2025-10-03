@@ -26,6 +26,24 @@ function Doc({ isNew }) {
         }
     }, [id, isNew, apiUrl]);
 
+    //logik för socketanslutning
+    useEffect(() => {
+    socket.connect();//anslut när komponenten renderas
+    //startar lyssnare på doc-updated
+
+     if (id) { // kontroll att vi har ett id
+        socket.emit('create', id);
+    }
+    socket.on('doc', (updatedData) => {
+        //placeholder
+    });
+
+
+    return () => {
+        socket.disconnect();//stäng ner anlsutning
+        socket.off('doc');//tar bort lysnaare
+    };
+}, [id]);
 
     return (
         <form>
