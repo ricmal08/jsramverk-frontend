@@ -24,41 +24,78 @@ function Doc({ isNew }) {
                     setContent(data.content);
                 });
         }
-    }, [id, isNew, apiUrl]);
+    }, [id, isNew]);
 
     //logik för socketanslutning
     useEffect(() => {
-    socket.connect();//anslut när komponenten renderas
-    //startar lyssnare på doc-updated
+        socket.connect();//anslut när komponenten renderas
+        //startar lyssnare på doc-updated
 
-     if (id) { // kontroll att vi har ett id
-        socket.emit('create', id);
-    }
-    socket.on('doc', (updatedData) => {
-        //placeholder
-    });
+        if (id) { // kontroll att vi har ett id
+            socket.emit('create', id);
+        }
+        socket.on('doc', (updatedData) => {
+            //placeholder
+        });
 
 
-    return () => {
-        socket.disconnect();//stäng ner anlsutning
-        socket.off('doc');//tar bort lysnaare
+        return () => {
+            socket.disconnect();//stäng ner anlsutning
+            socket.off('doc');//tar bort lysnaare
+        };
+    }, [id]);
+
+
+    const onTitlechange = (e) => {
+
+        const updateTitle = e.target.value;
+
+        setTitle(updateTitle);
+        //servern ska ta emot denna nya data via socket
+        const titleData = {
+            _id: id,
+            title: updateTitle //Bara det som ändrats
+        };
+        socket.emit('doc-title-update', titleData);
+
+
+
     };
-}, [id]);
+
+    const onTextchange = (e) => {
+
+        const updatedContent = e.target.value;
+
+        setContent(updatedContent);// Uppdater minne
+        //servern ska ta emot denna nya data via socket
+        const docData = {
+            _id: id,
+            content: updatedContent,
+        };
+
+        socket.emit('doc-update', docData); // Skicka till servern
+    };
+    //behöver för att inte invoka pagerefresh och bibehålla kontrollen
+    const handleSubmit = (e) => {
+
+
+        e.preventDefault();
+
+    };
 
     return (
-        <form>
-
+        <form onSubmit={handleSubmit}>
             <h2>{isNew ? 'Skapa Nytt Dokument' : 'Redigera Dokument'}</h2>
 
             <div>
                 <label htmlFor="title">Titel:</label>
-                <input type="text" id="title" name="title" />
+                <input type="text" id="title" name="title" value= {title} onChange={onTitlechange} />
             </div>
 
 
             <div>
                 <label htmlFor="content">Innehåll:</label>
-                <textarea id="content" name="content" />
+                <textarea id="content" name="content" value={content} onChange={onTextchange} />
             </div>
 
             <button type="submit">Spara Dokument</button>
