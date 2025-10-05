@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 const socket = io("https://jsramverk-editor-jahl24-bfeufbb0dwcfg6a6.northeurope-01.azurewebsites.net/");//ändrar denna till lokal adress för test
 
-function Doc({ isNew }) {
+function Doc({ apiUrl, isNew }) {//adderar till apiUrl då jag glömde det initialt
 
     //hämtar routerhooks
     const { id } = useParams();
@@ -24,7 +24,7 @@ function Doc({ isNew }) {
                     setContent(data.content);
                 });
         }
-    }, [id, isNew]);
+    }, [apiUrl, id, isNew]);//inkluderar apiUrl är för bestpractice
 
     //logik för socketanslutning
     useEffect(() => {
@@ -34,8 +34,11 @@ function Doc({ isNew }) {
         if (id) { // kontroll att vi har ett id
             socket.emit('create', id);
         }
-        socket.on('doc', (updatedData) => {
-            //placeholder
+        socket.on('doc', (newData) => {
+            if (newData._id === id) {
+                setTitle(newData.title);
+                setContent(newData.content);
+            }
         });
 
 
@@ -56,7 +59,7 @@ function Doc({ isNew }) {
             _id: id,
             title: updateTitle //Bara det som ändrats
         };
-        socket.emit('doc-title-update', titleData);
+        socket.emit('doc', titleData);
 
 
 
@@ -73,7 +76,7 @@ function Doc({ isNew }) {
             content: updatedContent,
         };
 
-        socket.emit('doc-update', docData); // Skicka till servern
+        socket.emit('doc', docData); // Skicka till servern
     };
     //behöver för att inte invoka pagerefresh och bibehålla kontrollen
     const handleSubmit = (e) => {
