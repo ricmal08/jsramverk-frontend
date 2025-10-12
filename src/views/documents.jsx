@@ -18,7 +18,7 @@ function Documents({ apiUrl }) {
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Nätverksfel');
+                throw new Error('Nätverksfel')
             }
             return response.json();
         })
@@ -27,10 +27,11 @@ function Documents({ apiUrl }) {
         setDocs(result.data.documents)
         })
         .catch(error => {
-        console.error('Error! Det gick inte att hämta dokument:', error);
+        console.error('Error! Det gick inte att hämta dokumenten:', error)
+        alert('Kunde inte hämta listan på dokument!')
         })
 
-    }, [apiUrl]);
+    }, [apiUrl])
 
     return (
         <div>
