@@ -3,20 +3,33 @@ import { Link } from 'react-router-dom';
 
 
 function Documents({ apiUrl }) {
-    const [docs, setDocs] = useState([]);
+    // Standard practice att spara hämtad data i react state, initialisera tom array här.
+    const [docs, setDocs] = useState([])
+
 
     useEffect(() => {
-        fetch(`${apiUrl}/api/documents`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Nätvärksfel');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setDocs(data);
-            })
-            .catch(error => console.error("Det gick inte att hämta dokument:", error));
+        fetch(`${apiUrl}graphql`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({ query: "{ documents { _id title } }" })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Nätverksfel');
+            }
+            return response.json();
+        })
+        .then(result => {
+        console.log('data retunerad:', result)
+        setDocs(result.data.documents)
+        })
+        .catch(error => {
+        console.error('Error! Det gick inte att hämta dokument:', error);
+        })
+
     }, [apiUrl]);
 
     return (

@@ -4,27 +4,43 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 const socket = io("https://jsramverk-editor-jahl24-bfeufbb0dwcfg6a6.northeurope-01.azurewebsites.net/");//ändrar denna till lokal adress för test
 
-function Doc({ apiUrl, isNew }) {//adderar till apiUrl då jag glömde det initialt
+function Doc({ isNew, apiUrl }) {
 
-    //hämtar routerhooks
+    // Hämta id från params
     const { id } = useParams();
-    const navigate = useNavigate();
 
-    const [title, setTitle] = useState('');//tar nya värdet för Titel och triggar en omrendering av komponenten.
-    const [content, setContent] = useState('');//samma för innehållet i formuläret
-
+    // sätt title och content
+    const [title, setTitle] = useState('')
+    const [content, setContent] = useState('')
 
     useEffect(() => {
-        // Fetch som bara körs första gången och om vi ska redigera ett befintligt dokument
-        if (!isNew && id) {
-            fetch(`${apiUrl}documents/${id}`)//ev skruva på detta?
-                .then(response => response.json())
-                .then(data => {
-                    setTitle(data.title);
-                    setContent(data.content);
-                });
+        if (!isNew) {
+            fetch(`${apiUrl}graphql`, {
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ query: `{ document(id: "${id}") { _id title content } }` })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Nätverksfel');
+                }
+                return response.json();
+            })
+            .then(result => {
+                console.log('data retunerad:', result)
+                setTitle(result.data.document.title)
+                setContent(result.data.document.content)
+                })
+                .catch(error => {
+                console.error('Error! Det gick inte att hämta dokument:', error);
+            })
         }
-    }, [apiUrl, id, isNew]);//inkluderar apiUrl är för bestpractice
+    }, [isNew, id, apiUrl])
+
+    const navigate = useNavigate();
 
     //logik för socketanslutning
     useEffect(() => {
@@ -60,8 +76,6 @@ function Doc({ apiUrl, isNew }) {//adderar till apiUrl då jag glömde det initi
             title: updateTitle //Bara det som ändrats
         };
         socket.emit('doc', titleData);
-
-
 
     };
 
