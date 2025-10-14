@@ -1,5 +1,8 @@
+import { io } from "socket.io-client";
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+
+const socket = io("https://jsramverk-editor-jahl24-bfeufbb0dwcfg6a6.northeurope-01.azurewebsites.net/");//ändrar denna till lokal adress för test
 
 function Doc({ isNew, apiUrl }) {
 
@@ -68,24 +71,70 @@ function Doc({ isNew, apiUrl }) {
         })
     }
 
+    //logik för socketanslutning
+    useEffect(() => {
+        socket.connect();//anslut när komponenten renderas
+        //startar lyssnare på doc-updated
+
+        if (id) { // kontroll att vi har ett id
+            socket.emit('create', id);
+        }
+        socket.on('doc', (newData) => {
+            if (newData._id === id) {
+                setTitle(newData.title);
+                setContent(newData.content);
+            }
+        });
+
+
+        return () => {
+            socket.disconnect();//stäng ner anlsutning
+            socket.off('doc');//tar bort lysnaare
+        };
+    }, [id]);
+
+
+    const onTitlechange = (e) => {
+
+        const updateTitle = e.target.value;
+
+        setTitle(updateTitle);
+        //servern ska ta emot denna nya data via socket
+        const titleData = {
+            _id: id,
+            title: updateTitle //Bara det som ändrats
+        };
+        socket.emit('doc', titleData);
+
+    };
+
+    const onTextchange = (e) => {
+
+        const updatedContent = e.target.value;
+
+        setContent(updatedContent);// Uppdater minne
+        //servern ska ta emot denna nya data via socket
+        const docData = {
+            _id: id,
+            content: updatedContent,
+        };
+
+        socket.emit('doc', docData); // Skicka till servern
+    };
 
     return (
         <form onSubmit={handleSubmit}>
-
             <h2>{isNew ? 'Skapa Nytt Dokument' : 'Redigera Dokument'}</h2>
 
             <div>
                 <label htmlFor="title">Titel:</label>
-                <input type="text" id="title" name="title" required value={title} onChange={(e) => 
-                    setTitle(e.target.value)
-                } />
+                <input type="text" id="title" name="title" required value= {title} onChange={onTitlechange} />
             </div>
 
 
             <div>
                 <label htmlFor="content">Innehåll:</label>
-                <textarea id="content" name="content" value={content} onChange={(e) => 
-                    setContent(e.target.value)} />
+                <textarea id="content" name="content" value={content} onChange={onTextchange} />
             </div>
 
             <button type="submit">Spara Dokument</button>
