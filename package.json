@@ -12,6 +12,7 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@chakra-ui/menu": "^2.2.1",
     "@chakra-ui/react": "3.27.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
