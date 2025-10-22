@@ -1,11 +1,12 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Documents from './views/documents.jsx';
 
 //kapar api-koppling med egen definierad
-global.fetch = vi.fn();
+// Ändrade till globalThis vilket är man ska använda
+globalThis.fetch = vi.fn();
 
     // adderar funktion för att rendera komponenten via routern
     const renderWithRouter = (ui) => {
@@ -17,12 +18,19 @@ global.fetch = vi.fn();
         vi.clearAllMocks();
         fetch.mockResolvedValue({
             ok: true,
-            json: () => Promise.resolve([]),
+            json: () => Promise.resolve({
+                data: {
+                    documents: []
+                }
+            }),
         });
     });
 
-    it('should render headline and create-link', () => {
-        renderWithRouter(<Documents apiUrl="http://placeholder.api" />);
+    it('should render headline and create-link', async () => {
+       await act(() => {
+            renderWithRouter(<Documents apiUrl="http://placeholder.api" />);
+        });
+        
 
 
         const headline = screen.getByRole('heading', { level: 2, name: /Dokument/i });
@@ -40,7 +48,11 @@ global.fetch = vi.fn();
         //gäller bara för nästa anrop
         fetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve([]),
+        json: () => Promise.resolve({
+            data: {
+                documents: []
+            }
+        }),
         });
 
         renderWithRouter(<Documents apiUrl="http://placeholder.api" />);

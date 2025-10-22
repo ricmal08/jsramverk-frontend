@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { describe, it, expect,  vi, beforeAll, afterAll } from 'vitest';
 import userEvent from '@testing-library/user-event';
 
@@ -11,11 +11,15 @@ import App from './App';
 //Mockar api-anrop
 beforeAll(() => {
     //kapar api-koppling
-    global.fetch = vi.fn(() =>
+    globalThis.fetch = vi.fn(() =>
         //Tar inte emot någon API-input, utan ignorerar det helt och hållet och ersätter hela anropet med en resolve tom lista
         Promise.resolve({
             ok: true,
-            json: () => Promise.resolve([]),
+            json: () => Promise.resolve({
+              data: {
+                documents: []
+              }
+            }),
         })
     );
 });
@@ -31,9 +35,10 @@ describe('App Component', () => {
         expect(true).toBe(true);
     });
 
-    it('should render app title "SSR Editor"', () => {
-
-    render(<App />);
+    it('should render app title "SSR Editor"', async () => {
+      await act(() => {
+        render(<App />);
+      });
 
     const pageTitle = screen.getByRole('heading', { level: 1, name: /SSR Editor/i }); ///vi letar efter en rubrik med html-tagg,
     //<h1> som innehåller texten SSR Editor, i = oskriftkänslig
