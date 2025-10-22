@@ -9,9 +9,10 @@ function Doc({ isNew, apiUrl }) {
     // Hämta id från params
     const { id } = useParams()
 
-    // sätt title och content
+    // sätt title och content även type
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
+    const [isCodeDoc, setIsCodeDoc] = useState(false);
 
     useEffect(() => {
         if (!isNew) {
@@ -21,7 +22,7 @@ function Doc({ isNew, apiUrl }) {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                 },
-                body: JSON.stringify({ query: `{ document(id: "${id}") { _id title content } }` })
+                body: JSON.stringify({ query: `{ document(id: "${id}") { _id title content type } }` })
             })
             .then(response => {
                 if (!response.ok) {
@@ -33,6 +34,10 @@ function Doc({ isNew, apiUrl }) {
                 console.log('data retunerad:', result)
                 setTitle(result.data.document.title)
                 setContent(result.data.document.content)
+
+                if (result.data.document.type === 'code') {
+                    setIsCodeDoc(true)
+                }
                 })
                 .catch(error => {
                 console.error('Error! Det gick inte att hämta dokument:', error)
@@ -57,7 +62,7 @@ function Doc({ isNew, apiUrl }) {
         fetch(url, {
             method: method,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, content })
+            body: JSON.stringify({ title, content, type: isCodeDoc ? 'code' : 'text' })
         })
         .then(response => {
             if (!response.ok) {
