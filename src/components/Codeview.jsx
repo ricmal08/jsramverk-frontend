@@ -38,6 +38,7 @@ const CodeView = ( {editorRef, language}) => {
                 colorScheme="green"
                 color="white"
                 mb={4}
+                onClick={runCode}
             >
                 Run Code
             </Button>
