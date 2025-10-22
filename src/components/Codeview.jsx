@@ -5,9 +5,28 @@ const CodeView = ( {editorRef, language}) => {
         const sourceCode = editorRef.current.getValue();
         if (!sourceCode) return;
         try {
+            const data = {
+                // base64
+                code: btoa(sourceCode)
+            }
+
+            fetch("https://execjs.emilfolino.se/code", {
+                body: JSON.stringify(data),
+                headers: {
+                    'content-type': 'application/json'
+                },
+                method: 'POST'
+            })
+            .then(function (response) {
+                return response.json()
+            })
+            .then(function (result) {
+                let decodedOutput = atob(result.data)
+                console.log(decodedOutput)
+            })
 
         } catch (error) {
-            console.error("Fel vid datahämtning")
+            console.error("Fel vid datahämtning", error)
         }
 
     }
@@ -19,6 +38,7 @@ const CodeView = ( {editorRef, language}) => {
                 colorScheme="green"
                 color="white"
                 mb={4}
+                onClick={runCode}
             >
                 Run Code
             </Button>
