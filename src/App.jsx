@@ -15,11 +15,11 @@ const API_URL = "https://jsramverk-editor-jahl24-bfeufbb0dwcfg6a6.northeurope-01
 
 function App() {
 
-  return (
+  /*return (
     <CodeEditor />
   );
-
-  /*return (
+  */
+  return (
     <BrowserRouter basename="">
       <div className="App">
         <header>
@@ -42,7 +42,7 @@ function App() {
     </BrowserRouter>
 
   )
-  */
+
 }
 
 export default App
