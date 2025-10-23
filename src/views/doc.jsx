@@ -2,6 +2,10 @@ import { io } from "socket.io-client";
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+import CodeEditor from '../components/Codeeditor';
+
+import { Button, Box } from '@chakra-ui/react'; 
+
 const socket = io("https://jsramverk-editor-jahl24-bfeufbb0dwcfg6a6.northeurope-01.azurewebsites.net/");//ändrar denna till lokal adress för test
 
 function Doc({ isNew, apiUrl }) {
@@ -136,6 +140,15 @@ function Doc({ isNew, apiUrl }) {
                 <input type="text" id="title" name="title" required value= {title} onChange={onTitlechange} />
             </div>
 
+            {/*lägger till en knapp för att växla mellan txt och kodläge*/}
+            <Box mt={4} display="flex" gap={4}>
+                <Button
+                    type="button"
+                    onClick={() => setIsCodeDoc(!isCodeDoc)}
+                >
+                    {isCodeDoc ? "Textläge" : "Kodläge"}
+                </Button>
+            </Box>
 
             <div>
                 <label htmlFor="content">Innehåll:</label>
