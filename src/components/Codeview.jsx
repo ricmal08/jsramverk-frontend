@@ -35,7 +35,7 @@ const CodeView = ( {editorRef, language}) => {
             <Text mb={2} fontSize="lg">CodeView  </Text>
             <Button
                 variant='outline'
-                colorScheme="green"
+                colorScheme="white"
                 color="white"
                 mb={4}
                 onClick={runCode}

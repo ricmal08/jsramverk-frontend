@@ -19,6 +19,7 @@ function Doc({ isNew, apiUrl }) {
     const [isCodeDoc, setIsCodeDoc] = useState(false);
 
     useEffect(() => {
+        console.log("isCodeDoc:", isCodeDoc);
         if (!isNew) {
             fetch(`${apiUrl}graphql`, {
                 method:'POST',
@@ -151,8 +152,22 @@ function Doc({ isNew, apiUrl }) {
             </Box>
 
             <div>
-                <label htmlFor="content">Innehåll:</label>
-                <textarea id="content" name="content" value={content} onChange={onTextchange} />
+
+            {/*villkorlig rendering. Implementerar CodeEditor*/}
+            {isCodeDoc ? (
+                <CodeEditor />
+                ) : (
+                    <>
+                    {/*villkorlig visning av label*/}
+                    <label htmlFor="content">Innehåll:</label>
+                    <textarea
+                    id="content"
+                    name="content"
+                    value={content}
+                    onChange={onTextchange}
+                    />
+                    </>
+                )}
             </div>
 
             <button type="submit">Spara Dokument</button>
