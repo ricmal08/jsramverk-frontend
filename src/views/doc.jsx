@@ -136,8 +136,9 @@ function Doc({ isNew, apiUrl }) {
         <form onSubmit={handleSubmit}>
             <h2>{isNew ? 'Skapa Nytt Dokument' : 'Redigera Dokument'}</h2>
 
-            <div>
-                <label htmlFor="title">Titel:</label>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+
+                <label htmlFor="title"style={{ marginBottom: "0.3rem" }}>Titel:</label>
                 <input type="text" id="title" name="title" required value= {title} onChange={onTitlechange} />
             </div>
 
@@ -151,7 +152,7 @@ function Doc({ isNew, apiUrl }) {
                 </Button>
             </Box>
 
-            <div>
+            <div style={{ display: "flex", flexDirection: "column" }}>
 
             {/*villkorlig rendering. Implementerar CodeEditor*/}
             {isCodeDoc ? (
@@ -159,18 +160,26 @@ function Doc({ isNew, apiUrl }) {
                 ) : (
                     <>
                     {/*villkorlig visning av label*/}
-                    <label htmlFor="content">Innehåll:</label>
+                    <label htmlFor="content"style={{ marginBottom: "0.5rem", marginTop: "2.5rem" }}>Innehåll:</label>
+
                     <textarea
                     id="content"
                     name="content"
                     value={content}
                     onChange={onTextchange}
+                    rows="20"
+                    style={{
+                        padding: "0.5rem",
+                        fontSize: "1rem",
+                        resize: "vertical",
+                    }}
                     />
                     </>
                 )}
             </div>
 
-            <button type="submit">Spara Dokument</button>
+            <button type="submit"
+            >Spara Dokument</button>
         </form>
     );
 }
