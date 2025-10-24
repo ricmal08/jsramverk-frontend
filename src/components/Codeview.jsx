@@ -1,5 +1,9 @@
 import { Box, Button, Text } from "@chakra-ui/react";
+import { useState } from "react";
+
 const CodeView = ( {editorRef, language}) => {
+    // En useState för att visa outputen från koden
+    const [outPut, setOutPut] = useState("")
 
     const runCode = async (args) => {
         const sourceCode = editorRef.current.getValue();
@@ -23,6 +27,7 @@ const CodeView = ( {editorRef, language}) => {
             .then(function (result) {
                 let decodedOutput = atob(result.data)
                 console.log(decodedOutput)
+                setOutPut(decodedOutput)
             })
 
         } catch (error) {
@@ -52,7 +57,7 @@ const CodeView = ( {editorRef, language}) => {
                 color="white"
 
             >
-            Test
+            <pre>{ outPut || 'Klicka på "Run Code" för att köra koden och se output' }</pre>
 
             </Box>
         </Box>
