@@ -5,8 +5,12 @@ import { Box, HStack} from "@chakra-ui/react"
 import LanguageSelector from './Languageselector';
 import CodeView from './Codeview';
 
-const CodeEditor = () => {
-        const editorRef = useRef()
+function CodeEditor({
+    initialContent,
+    onContentChange,
+    isCodeMode
+}) {
+const editorRef = useRef()
     const [value, setValue] = useState("")
     const [language, setLanguage] = useState("javascript")
 
@@ -32,8 +36,8 @@ const CodeEditor = () => {
                     onMount ={
                     onMount
                     }
-                    value={value}
-                    onChange={(value) => setValue(value)}
+                    value={initialContent}
+                    onChange={onContentChange}
                     />
                 </Box>
             </Box>
