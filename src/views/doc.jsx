@@ -57,6 +57,7 @@ function Doc({ isNew, apiUrl }) {
     // Hantera submit
     const handleSubmit = (e) => {
         e.preventDefault()
+        console.log("SPARAR NU:", content); //Debugging
 
         // Kolla om det är ett nytt dokument eller ej (post/put)
         const method = isNew ? 'POST' : 'PUT'
@@ -118,9 +119,9 @@ function Doc({ isNew, apiUrl }) {
 
     };
 
-    const onTextchange = (e) => {
+    const onUpdatedContent = (updatedContent) => {
 
-        const updatedContent = e.target.value;
+        //const updatedContent = e.target.value;
 
         setContent(updatedContent);// Uppdater minne
         //servern ska ta emot denna nya data via socket
@@ -136,8 +137,17 @@ function Doc({ isNew, apiUrl }) {
         <form onSubmit={handleSubmit}>
             <h2>{isNew ? 'Skapa Nytt Dokument' : 'Redigera Dokument'}</h2>
 
-            <div>
-                <label htmlFor="title">Titel:</label>
+
+            <Button mt={4} display="flex" gap={4} style={{marginBottom: "3.5rem", marginTop: "2.5rem"}}
+                type="button"
+                onClick={() => navigate('/')}
+
+            >Tillbaka
+            </Button>
+
+            <div style={{ display: "flex", flexDirection: "column" }}>
+
+                <label htmlFor="title"style={{ marginBottom: "0.3rem" }}>Titel:</label>
                 <input type="text" id="title" name="title" required value= {title} onChange={onTitlechange} />
             </div>
 
@@ -151,26 +161,38 @@ function Doc({ isNew, apiUrl }) {
                 </Button>
             </Box>
 
-            <div>
+            <div style={{ display: "flex", flexDirection: "column" }}>
 
             {/*villkorlig rendering. Implementerar CodeEditor*/}
             {isCodeDoc ? (
-                <CodeEditor />
+                <CodeEditor
+                /*Har lagt till properties som glömts bort tidigare*/
+                initialContent={content}
+                onContentChange={onUpdatedContent}
+                isCodeMode={isCodeDoc} />
                 ) : (
                     <>
                     {/*villkorlig visning av label*/}
-                    <label htmlFor="content">Innehåll:</label>
+                    <label htmlFor="content"style={{ marginBottom: "0.5rem", marginTop: "2.5rem" }}>Innehåll:</label>
+
                     <textarea
                     id="content"
                     name="content"
                     value={content}
-                    onChange={onTextchange}
+                    onChange={(e) => onUpdatedContent(e.target.value)}
+                    rows="20"
+                    style={{
+                        padding: "0.5rem",
+                        fontSize: "1rem",
+                        resize: "vertical",
+                    }}
                     />
                     </>
                 )}
             </div>
 
-            <button type="submit">Spara Dokument</button>
+            <button type="submit"
+            >Spara Dokument</button>
         </form>
     );
 }
