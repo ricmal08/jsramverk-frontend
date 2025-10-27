@@ -4,6 +4,8 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import CodeEditor from './components/Codeeditor.jsx';
+
 
 import Documents from './views/documents';
 import Doc from './views/doc';
@@ -13,7 +15,10 @@ const API_URL = "https://jsramverk-editor-jahl24-bfeufbb0dwcfg6a6.northeurope-01
 
 function App() {
 
-
+  /*return (
+    <CodeEditor />
+  );
+  */
   return (
     <BrowserRouter basename="">
       <div className="App">
@@ -35,7 +40,9 @@ function App() {
 
     </div>
     </BrowserRouter>
+
   )
+
 }
 
 export default App
