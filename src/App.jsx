@@ -20,7 +20,7 @@ function App() {
   );
   */
   return (
-    <BrowserRouter basename="">
+    <BrowserRouter basename="/jsramverk-frontend">
       <div className="App">
         <header>
           <h1>SSR Editor</h1>
